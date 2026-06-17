@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abbas Yousefzadeh — iOS Developer</title>
+  <meta name="description" content="iOS apps by Abbas Yousefzadeh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0e;
+      --surface: #131317;
+      --border: rgba(255,255,255,0.06);
+      --text: #e8e8ec;
+      --muted: #6b6b80;
+      --dim: #3a3a48;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+      background: rgba(12,12,14,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-name { font-weight: 500; font-size: .9rem; color: var(--text); }
+    .nav-links { display: flex; gap: 1.75rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: .85rem; transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Layout ── */
+    .page { max-width: 680px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── Hero ── */
+    .hero { padding: 160px 0 100px; }
+    .hero-name {
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      font-weight: 600; letter-spacing: -.04em; line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    .hero-name span { color: var(--muted); }
+    .hero-bio {
+      font-size: 1rem; color: var(--muted); line-height: 1.8;
+      max-width: 420px; margin-bottom: 2.25rem;
+    }
+    .hero-bio strong { color: var(--text); font-weight: 500; }
+    .hero-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .55rem 1.1rem; border-radius: 8px;
+      font-size: .85rem; font-weight: 500; text-decoration: none;
+      transition: all .15s; font-family: inherit; cursor: pointer;
+    }
+    .btn-primary { background: var(--text); color: #000; border: none; }
+    .btn-primary:hover { opacity: .85; }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--dim); }
+
+    /* ── Section ── */
+    .section { padding: 80px 0; border-top: 1px solid var(--border); }
+    .section-label {
+      font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--dim);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── App Entries ── */
+    .app-list { display: flex; flex-direction: column; gap: 3.5rem; }
+
+    .app-entry { display: flex; gap: 1.5rem; align-items: flex-start; }
+
+    .app-icon {
+      width: 80px; height: 80px; border-radius: 18px;
+      flex-shrink: 0; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .app-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .app-content { flex: 1; min-width: 0; }
+    .app-title-row {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap; margin-bottom: .25rem;
+    }
+    .app-name {
+      font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em;
+      color: var(--text);
+    }
+    .app-meta { font-size: .78rem; color: var(--dim); white-space: nowrap; }
+    .app-category { font-size: .82rem; color: var(--muted); margin-bottom: .85rem; }
+    .app-desc {
+      font-size: .92rem; color: var(--muted); line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+    .app-row {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+    }
+    .app-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .tag {
+      font-size: .72rem; color: var(--dim);
+      border: 1px solid var(--border);
+      border-radius: 5px; padding: .18rem .5rem;
+    }
+    .app-link {
+      display: inline-flex; align-items: center; gap: .45rem;
+      font-size: .82rem; font-weight: 600; color: #000;
+      background: var(--text);
+      text-decoration: none; white-space: nowrap;
+      padding: .45rem .9rem; border-radius: 7px;
+      transition: opacity .15s;
+    }
+    .app-link:hover { opacity: .85; }
+    .app-link svg { width: 13px; height: 13px; }
+
+    /* ── About ── */
+    .about-text {
+      font-size: .95rem; color: var(--muted); line-height: 1.85;
+      max-width: 520px;
+    }
+    .about-text p { margin-bottom: .9rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text strong { color: var(--text); font-weight: 500; }
+    .about-text a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--dim); }
+    .about-text a:hover { border-color: var(--text); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; max-width: 680px; margin: 0 auto;
+    }
+    footer p { font-size: .8rem; color: var(--dim); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-size: .8rem; color: var(--muted); text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Abbas Yousefzadeh</div>
+  <div class="nav-links">
+    <a href="#apps">Apps</a>
+    <a href="#about">About</a>
+    <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1 class="hero-name">Abbas<br /><span>Yousefzadeh</span></h1>
+    <p class="hero-bio">
+      iOS developer based in <strong>Napoli</strong>.
+      I build apps in Swift — focused on accessibility, privacy, and experiences that feel right on the platform.
+    </p>
+    <div class="hero-actions">
+      <a href="#apps" class="btn btn-primary">View apps</a>
+      <a href="mailto:erfan.mafia77@gmail.com" class="btn btn-ghost">Get in touch</a>
+      <a href="https://github.com/whyzii" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+    </div>
+  </div>
+
+  <!-- Apps -->
+  <div class="section" id="apps">
+    <p class="section-label">Apps</p>
+    <div class="app-list">
+
+      <!-- Paced -->
+      <div class="app-entry">
+        <div class="app-icon">
+          <img src="icon-paced.png" alt="Paced app icon" />
+        </div>
+        <div class="app-content">
+          <div class="app-title-row">
+            <div class="app-name">Paced: Stutter Support</div>
+            <div class="app-meta">5.0 &middot; Health &amp; Fitness</div>
+          </div>
+          <div class="app-category">iPhone &middot; iPad &middot; Apple Watch &middot; Mac</div>
+          <p class="app-desc">
+            A metronome-guided speech fluency app for people who stutter.
+            The Gradual Fade mode slowly withdraws the metronome over time —
+            the goal is to make it unnecessary, not a crutch. Includes an Apple Watch
+            companion for wrist control and runs with zero data collection.
+          </p>
+          <div class="app-row">
+            <div class="app-tags">
+              <span class="tag">SwiftUI</span>
+              <span class="tag">watchOS</span>
+              <span class="tag">CoreHaptics</span>
+              <span class="tag">Catalyst</span>
+            </div>
+            <a class="app-link" href="https://apps.apple.com/it/app/paced-stutter-support/id6759551515" target="_blank" rel="noopener">
+              App Store
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- GraBeat -->
+      <div class="app-entry">
+        <div class="app-icon">
+          <img src="icon-grabeat.png" alt="GraBeat app icon" />
+        </div>
+        <div class="app-content">
+          <div class="app-title-row">
+            <div class="app-name">GraBeat: Play, Pinch, Repeat</div>
+            <div class="app-meta">5.0 &middot; #79 Action</div>
+          </div>
+          <div class="app-category">iPhone &middot; iPad &middot; Mac</div>
+          <p class="app-desc">
+            A two-player rhythm game controlled by hand gestures — no buttons, no controllers.
+            The camera tracks your hands in real time using Vision and you catch notes to the beat.
+            Supports Versus and Co-op on one screen, with Game Center leaderboards and a built-in
+            cyberpunk Photo Booth that saves shots locally.
+          </p>
+          <div class="app-row">
+            <div class="app-tags">
+              <span class="tag">SwiftUI</span>
+              <span class="tag">Vision</span>
+              <span class="tag">AVFoundation</span>
+              <span class="tag">Game Center</span>
+            </div>
+            <a class="app-link" href="https://apps.apple.com/it/app/grabeat-play-pinch-repeat/id6774738003" target="_blank" rel="noopener">
+              App Store
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="section" id="about">
+    <p class="section-label">About</p>
+    <div class="about-text">
+      <p>
+        I'm Abbas, an iOS developer based in Napoli. I work in Swift and SwiftUI,
+        and I've shipped apps across <strong>health, accessibility, and games</strong> —
+        three areas that don't have much overlap, which I think is the point.
+      </p>
+      <p>
+        Paced came from noticing there weren't many well-designed tools for people who stutter.
+        GraBeat came from wanting to make something social and physical that required no setup at all.
+        Both apps are free, private, and built without third-party dependencies.
+      </p>
+      <p>
+        Reach me at <a href="mailto:erfan.mafia77@gmail.com">erfan.mafia77@gmail.com</a>
+        or find my code on <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Abbas Yousefzadeh &mdash; Napoli, Italy</p>
+  <div class="footer-links">
+    <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://apps.apple.com/it/developer/abbas-yousefzadeh/id1861434809" target="_blank" rel="noopener">App Store</a>
+    <a href="mailto:erfan.mafia77@gmail.com">Email</a>
+  </div>
+</footer>
+
+</body>
+</html>
