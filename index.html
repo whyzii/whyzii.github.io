@@ -4,19 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abbas Yousefzadeh — iOS Developer</title>
-  <meta name="description" content="iOS apps by Abbas Yousefzadeh." />
+  <meta name="description" content="iOS apps by Abbas Yousefzadeh. Swift, SwiftUI, and small ideas that make sense." />
+  <meta name="theme-color" content="#0b0b0d" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Abbas Yousefzadeh — iOS Developer" />
+  <meta property="og:description" content="Swift apps across health, games, and creative tools — built private, built to feel right." />
+  <meta property="og:type" content="website" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0c0c0e;
-      --surface: #131317;
-      --border: rgba(255,255,255,0.06);
-      --text: #e8e8ec;
-      --muted: #6b6b80;
-      --dim: #3a3a48;
+      --bg:       #0b0b0d;
+      --bg-soft:  #101015;
+      --surface:  #131318;
+      --border:   rgba(255,255,255,0.07);
+      --border-2: rgba(255,255,255,0.12);
+      --text:     #ececf1;
+      --muted:    #8a8a9c;
+      --dim:      #4a4a5a;
+      --faint:    #2c2c38;
+
+      /* one quiet accent — appears only on interaction */
+      --accent:    #8b95ff;
+      --accent-2:  #c89bff;
+      --accent-glow: rgba(139,149,255,0.45);
+
+      --ease: cubic-bezier(.22,.61,.36,1);
     }
 
     html { scroll-behavior: smooth; }
@@ -27,149 +46,304 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      position: relative;
     }
+
+    /* ── Ambient texture: faint dot grid ── */
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+      background-size: 26px 26px;
+      opacity: .6;
+      mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 75%);
+    }
+
+    /* ── Breathing ambient glow behind hero (introvert calm) ── */
+    .ambient {
+      position: fixed; top: -10%; left: 50%; z-index: 0;
+      width: 70vw; max-width: 760px; aspect-ratio: 1;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(139,149,255,0.10), rgba(200,155,255,0.05) 40%, transparent 68%);
+      filter: blur(40px);
+      pointer-events: none;
+      animation: breathe 11s var(--ease) infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: .55; transform: translateX(-50%) scale(1); }
+      50%      { opacity: .9;  transform: translateX(-50%) scale(1.12); }
+    }
+
+    nav, .page, footer { position: relative; z-index: 3; }
 
     /* ── Nav ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 2rem; height: 56px;
-      background: rgba(12,12,14,0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
+      background: rgba(11,11,13,0.55);
+      backdrop-filter: blur(22px) saturate(120%);
+      -webkit-backdrop-filter: blur(22px) saturate(120%);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, background .3s;
     }
-    .nav-name { font-weight: 500; font-size: .9rem; color: var(--text); }
-    .nav-links { display: flex; gap: 1.75rem; align-items: center; }
+    nav.scrolled { border-bottom-color: var(--border); background: rgba(11,11,13,0.8); }
+    .nav-name {
+      font-weight: 600; font-size: .9rem; color: var(--text);
+      display: inline-flex; align-items: center; gap: .5rem;
+      letter-spacing: -.01em;
+    }
+    .nav-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 var(--accent-glow);
+      animation: pulse 3.2s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 var(--accent-glow); }
+      70%  { box-shadow: 0 0 0 7px rgba(139,149,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(139,149,255,0); }
+    }
+    .nav-links { display: flex; gap: 1.6rem; align-items: center; }
     .nav-links a {
       color: var(--muted); text-decoration: none;
-      font-size: .85rem; transition: color .15s;
+      font-size: .85rem; transition: color .18s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 0; bottom: -4px;
+      width: 100%; height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .28s var(--ease);
     }
     .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    @media (max-width: 560px) { .nav-links a.hide-sm { display: none; } }
 
     /* ── Layout ── */
-    .page { max-width: 680px; margin: 0 auto; padding: 0 2rem; }
+    .page { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── Reveal-on-scroll ── */
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .reveal.in { opacity: 1; transform: none; }
 
     /* ── Hero ── */
-    .hero { padding: 160px 0 100px; }
-    .hero-name {
-      font-size: clamp(2.2rem, 6vw, 3.2rem);
-      font-weight: 600; letter-spacing: -.04em; line-height: 1.1;
-      margin-bottom: 1.25rem;
+    .hero { padding: 168px 0 104px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .76rem; color: var(--muted); letter-spacing: .02em;
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: .32rem .8rem; margin-bottom: 1.8rem;
+      background: rgba(255,255,255,0.015);
     }
-    .hero-name span { color: var(--muted); }
+    .hero-tag .live {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #54e09a; box-shadow: 0 0 8px #54e09a;
+    }
+    .hero-name {
+      font-size: clamp(2.6rem, 9vw, 4.4rem);
+      font-weight: 700; letter-spacing: -.045em; line-height: 1.02;
+      margin-bottom: 1.5rem;
+    }
+    .hero-name .line { display: block; overflow: hidden; }
+    .hero-name .line span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: riseIn .9s var(--ease) forwards;
+    }
+    .hero-name .line:nth-child(2) span { animation-delay: .09s; }
+    @keyframes riseIn { to { transform: translateY(0); } }
+    .hero-name .last {
+      color: transparent;
+      background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 55%, var(--muted) 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
     .hero-bio {
-      font-size: 1rem; color: var(--muted); line-height: 1.8;
-      max-width: 420px; margin-bottom: 2.25rem;
+      font-size: 1.05rem; color: var(--muted); line-height: 1.8;
+      max-width: 460px; margin-bottom: 2.4rem;
     }
     .hero-bio strong { color: var(--text); font-weight: 500; }
+    .hero-bio em {
+      font-family: 'Newsreader', serif; font-style: italic;
+      font-size: 1.12em; color: var(--text);
+    }
     .hero-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
     .btn {
-      display: inline-flex; align-items: center; gap: .4rem;
-      padding: .55rem 1.1rem; border-radius: 8px;
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .6rem 1.15rem; border-radius: 9px;
       font-size: .85rem; font-weight: 500; text-decoration: none;
-      transition: all .15s; font-family: inherit; cursor: pointer;
+      transition: transform .18s var(--ease), opacity .18s, color .18s, border-color .18s, background .18s;
+      font-family: inherit; cursor: pointer;
     }
-    .btn-primary { background: var(--text); color: #000; border: none; }
-    .btn-primary:hover { opacity: .85; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--text); color: #000; border: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,.4);
+    }
+    .btn-primary:hover { opacity: .9; }
     .btn-ghost {
-      background: transparent; color: var(--muted);
+      background: rgba(255,255,255,0.02); color: var(--muted);
       border: 1px solid var(--border);
     }
-    .btn-ghost:hover { color: var(--text); border-color: var(--dim); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-2); }
 
     /* ── Section ── */
-    .section { padding: 80px 0; border-top: 1px solid var(--border); }
+    .section { padding: 92px 0; border-top: 1px solid var(--border); }
     .section-label {
-      font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+      display: flex; align-items: center; gap: .8rem;
+      font-size: .72rem; font-weight: 600; letter-spacing: .14em;
       text-transform: uppercase; color: var(--dim);
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.8rem;
+    }
+    .section-label::after {
+      content: ""; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
     }
 
-    /* ── App Entries ── */
-    .app-list { display: flex; flex-direction: column; gap: 3.5rem; }
+    /* ── App cards ── */
+    .app-list { display: flex; flex-direction: column; gap: 1.1rem; }
 
-    .app-entry { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .app-entry {
+      display: flex; gap: 1.4rem; align-items: flex-start;
+      padding: 1.5rem; border-radius: 18px;
+      background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(135deg, var(--border), transparent 60%) border-box;
+      border: 1px solid transparent;
+      position: relative; overflow: hidden;
+      transition: transform .35s var(--ease), background .35s;
+    }
+    .app-entry::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), rgba(139,149,255,0.08), transparent 60%);
+      opacity: 0; transition: opacity .4s; pointer-events: none;
+    }
+    .app-entry:hover {
+      transform: translateY(-3px);
+      background:
+        linear-gradient(var(--bg-soft), var(--bg-soft)) padding-box,
+        linear-gradient(135deg, var(--accent), transparent 55%) border-box;
+    }
+    .app-entry:hover::before { opacity: 1; }
 
     .app-icon {
-      width: 80px; height: 80px; border-radius: 18px;
+      width: 78px; height: 78px; border-radius: 18px;
       flex-shrink: 0; overflow: hidden;
       border: 1px solid var(--border);
+      transition: transform .35s var(--ease), box-shadow .35s;
+      will-change: transform;
+    }
+    .app-entry:hover .app-icon {
+      box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 1px var(--border-2);
     }
     .app-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .app-content { flex: 1; min-width: 0; }
+    .app-content { flex: 1; min-width: 0; position: relative; z-index: 1; }
     .app-title-row {
       display: flex; align-items: center;
       justify-content: space-between; gap: 1rem;
-      flex-wrap: wrap; margin-bottom: .25rem;
+      flex-wrap: wrap; margin-bottom: .3rem;
     }
     .app-name {
-      font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em;
+      font-size: 1.18rem; font-weight: 600; letter-spacing: -.02em;
       color: var(--text);
     }
-    .app-meta { font-size: .78rem; color: var(--dim); white-space: nowrap; }
-    .app-category { font-size: .82rem; color: var(--muted); margin-bottom: .85rem; }
+    .app-meta {
+      font-size: .76rem; color: var(--dim); white-space: nowrap;
+      display: inline-flex; align-items: center; gap: .35rem;
+    }
+    .app-meta .star { color: #f5c451; }
+    .app-category { font-size: .82rem; color: var(--muted); margin-bottom: .9rem; }
     .app-desc {
       font-size: .92rem; color: var(--muted); line-height: 1.75;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.3rem;
     }
     .app-row {
       display: flex; align-items: center;
-      justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+      justify-content: space-between; flex-wrap: wrap; gap: .8rem;
     }
-    .app-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .app-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
     .tag {
-      font-size: .72rem; color: var(--dim);
+      font-size: .72rem; color: var(--muted);
       border: 1px solid var(--border);
-      border-radius: 5px; padding: .18rem .5rem;
+      border-radius: 6px; padding: .2rem .55rem;
+      transition: color .2s, border-color .2s;
     }
+    .app-entry:hover .tag { border-color: var(--border-2); }
     .app-link {
       display: inline-flex; align-items: center; gap: .45rem;
       font-size: .82rem; font-weight: 600; color: #000;
       background: var(--text);
       text-decoration: none; white-space: nowrap;
-      padding: .45rem .9rem; border-radius: 7px;
-      transition: opacity .15s;
+      padding: .5rem .95rem; border-radius: 8px;
+      transition: transform .18s var(--ease), opacity .18s;
     }
-    .app-link:hover { opacity: .85; }
-    .app-link svg { width: 13px; height: 13px; }
+    .app-link:hover { opacity: .9; transform: translateX(2px); }
+    .app-link svg {
+      width: 13px; height: 13px;
+      transition: transform .2s var(--ease);
+    }
+    .app-link:hover svg { transform: translateX(2px); }
 
     /* ── About ── */
     .about-text {
-      font-size: .95rem; color: var(--muted); line-height: 1.85;
-      max-width: 520px;
+      font-size: .98rem; color: var(--muted); line-height: 1.9;
+      max-width: 540px;
     }
-    .about-text p { margin-bottom: .9rem; }
+    .about-text p { margin-bottom: 1rem; }
     .about-text p:last-child { margin-bottom: 0; }
     .about-text strong { color: var(--text); font-weight: 500; }
-    .about-text a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--dim); }
-    .about-text a:hover { border-color: var(--text); }
+    .about-text em {
+      font-family: 'Newsreader', serif; font-style: italic;
+      font-size: 1.1em; color: var(--text);
+    }
+    .about-text a {
+      color: var(--text); text-decoration: none;
+      border-bottom: 1px solid var(--dim); transition: border-color .2s;
+    }
+    .about-text a:hover { border-color: var(--accent); }
 
     /* ── Footer ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2rem;
+      padding: 2.4rem 2rem;
       display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem; max-width: 680px; margin: 0 auto;
+      flex-wrap: wrap; gap: 1rem; max-width: 720px; margin: 0 auto;
     }
     footer p { font-size: .8rem; color: var(--dim); }
-    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links { display: flex; gap: 1.4rem; flex-wrap: wrap; }
     .footer-links a {
       font-size: .8rem; color: var(--muted); text-decoration: none;
-      transition: color .15s;
+      transition: color .18s;
     }
     .footer-links a:hover { color: var(--text); }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+      .hero-name .line span { transform: none; }
+      .spotlight, .ambient { display: none; }
+    }
   </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-name">Abbas Yousefzadeh</div>
+<div class="ambient" aria-hidden="true"></div>
+
+<nav id="nav">
+  <div class="nav-name"><span class="nav-dot"></span>Abbas Yousefzadeh</div>
   <div class="nav-links">
     <a href="#apps">Apps</a>
     <a href="#about">About</a>
-    <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://www.linkedin.com/in/abbas-yousefzadeh-6685052b8" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="hide-sm" href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>
+    <a class="hide-sm" href="https://www.linkedin.com/in/abbas-yousefzadeh-6685052b8" target="_blank" rel="noopener">LinkedIn</a>
   </div>
 </nav>
 
@@ -177,12 +351,17 @@
 
   <!-- Hero -->
   <div class="hero">
-    <h1 class="hero-name">Abbas<br /><span>Yousefzadeh</span></h1>
-    <p class="hero-bio">
-      iOS developer based in <strong>Napoli</strong>.
-      I build apps in Swift — focused on accessibility, privacy, and experiences that feel right on the platform.
+    <div class="hero-tag"><span class="live"></span>iOS developer · Napoli</div>
+    <h1 class="hero-name">
+      <span class="line"><span>Abbas</span></span>
+      <span class="line"><span class="last">Yousefzadeh</span></span>
+    </h1>
+    <p class="hero-bio reveal">
+      I build apps in <strong>Swift</strong>. Early in the journey, always learning,
+      and drawn to <em>ideas worth building</em>. Focused on accessibility, privacy,
+      and experiences that feel right on the platform.
     </p>
-    <div class="hero-actions">
+    <div class="hero-actions reveal">
       <a href="#apps" class="btn btn-primary">View apps</a>
       <a href="mailto:abbas.yousefzadeh98@gmail.com" class="btn btn-ghost">Get in touch</a>
       <a href="https://github.com/whyzii" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
@@ -192,22 +371,22 @@
 
   <!-- Apps -->
   <div class="section" id="apps">
-    <p class="section-label">Apps</p>
+    <p class="section-label reveal">Apps</p>
     <div class="app-list">
 
       <!-- GraBeat -->
-      <div class="app-entry">
+      <div class="app-entry reveal" data-tilt>
         <div class="app-icon">
           <img src="icon-grabeat.png" alt="GraBeat app icon" />
         </div>
         <div class="app-content">
           <div class="app-title-row">
             <div class="app-name">GraBeat: Play, Pinch, Repeat</div>
-            <div class="app-meta">5.0 &middot; #79 Action</div>
+            <div class="app-meta"><span class="star">★</span> 5.0 · #79 Action</div>
           </div>
-          <div class="app-category">iPhone &middot; iPad &middot; Mac</div>
+          <div class="app-category">iPhone · iPad · Mac</div>
           <p class="app-desc">
-            A two-player rhythm game controlled by hand gestures — no buttons, no controllers.
+            A two-player rhythm game controlled by hand gestures, no buttons, no controllers.
             The camera tracks your hands in real time using Vision and you catch notes to the beat.
             Supports Versus and Co-op on one screen, with Game Center leaderboards and a built-in
             cyberpunk Photo Booth that saves shots locally.
@@ -228,20 +407,20 @@
       </div>
 
       <!-- Paced -->
-      <div class="app-entry">
+      <div class="app-entry reveal" data-tilt>
         <div class="app-icon">
           <img src="icon-paced.png" alt="Paced app icon" />
         </div>
         <div class="app-content">
           <div class="app-title-row">
             <div class="app-name">Paced: Stutter Support</div>
-            <div class="app-meta">5.0 &middot; Health &amp; Fitness</div>
+            <div class="app-meta"><span class="star">★</span> 5.0 · Health &amp; Fitness</div>
           </div>
-          <div class="app-category">iPhone &middot; iPad &middot; Apple Watch &middot; Mac</div>
+          <div class="app-category">iPhone · iPad · Apple Watch · Mac</div>
           <p class="app-desc">
             A metronome-guided speech fluency app for people who stutter.
-            The Gradual Fade mode slowly withdraws the metronome over time —
-            the goal is to make it unnecessary, not a crutch. Includes an Apple Watch
+            The Gradual Fade mode slowly withdraws the metronome over time.
+            The goal is to make it unnecessary, not a crutch. Includes an Apple Watch
             companion for wrist control and runs with zero data collection.
           </p>
           <div class="app-row">
@@ -260,20 +439,20 @@
       </div>
 
       <!-- RapUp -->
-      <div class="app-entry">
+      <div class="app-entry reveal" data-tilt>
         <div class="app-icon">
           <img src="icon-rapup.png" alt="RapUp app icon" />
         </div>
         <div class="app-content">
           <div class="app-title-row">
-            <div class="app-name">RapUp — Lyrics Editor</div>
-            <div class="app-meta">Coming to App Store</div>
+            <div class="app-name">RapUp · Lyrics Editor</div>
+            <div class="app-meta">Music</div>
           </div>
           <div class="app-category">iPhone</div>
           <p class="app-desc">
             A writing environment built for songwriters. Organizes lyrics into a library with folders,
-            bookmarks, and soft-delete. The editor structures songs section by section — Verse, Chorus,
-            Bridge — with drag-and-drop reordering, collapsible sections, and a 50-state undo stack.
+            bookmarks, and soft-delete. The editor structures songs into sections like Verse, Chorus, and
+            Bridge, with drag-and-drop reordering, collapsible sections, and a 50-state undo stack.
           </p>
           <div class="app-row">
             <div class="app-tags">
@@ -282,8 +461,8 @@
               <span class="tag">MVVM</span>
               <span class="tag">iOS 17+</span>
             </div>
-            <a class="app-link" href="https://github.com/whyzii/RapUp" target="_blank" rel="noopener">
-              View on GitHub
+            <a class="app-link" href="https://apps.apple.com/it/app/rapup/id6756567393" target="_blank" rel="noopener">
+              App Store
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
           </div>
@@ -295,12 +474,12 @@
 
   <!-- About -->
   <div class="section" id="about">
-    <p class="section-label">About</p>
-    <div class="about-text">
+    <p class="section-label reveal">About</p>
+    <div class="about-text reveal">
       <p>
         I'm Abbas, an iOS developer based in Napoli. I work in Swift and SwiftUI,
-        and I've built apps across <strong>health, games, and creative tools</strong> —
-        three areas that don't have much overlap, which I think is the point.
+        and I've built apps across <strong>health, games, and creative tools</strong>,
+        three areas that don't have much overlap, which I think is <em>the point</em>.
       </p>
       <p>
         Paced came from noticing there weren't many well-designed tools for people who stutter.
@@ -309,7 +488,9 @@
         All apps are free, private, and built without third-party dependencies.
       </p>
       <p>
-        Reach me at <a href="mailto:abbas.yousefzadeh98@gmail.com">abbas.yousefzadeh98@gmail.com</a>,
+        I'm early in this and still exploring, open to new technologies and to the kind
+        of work that has a reason behind it. Reach me at
+        <a href="mailto:abbas.yousefzadeh98@gmail.com">abbas.yousefzadeh98@gmail.com</a>,
         find my code on <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>,
         or connect on <a href="https://www.linkedin.com/in/abbas-yousefzadeh-6685052b8" target="_blank" rel="noopener">LinkedIn</a>.
       </p>
@@ -319,7 +500,7 @@
 </div>
 
 <footer>
-  <p>Abbas Yousefzadeh &mdash; Napoli, Italy</p>
+  <p>Abbas Yousefzadeh · Napoli, Italy</p>
   <div class="footer-links">
     <a href="https://github.com/whyzii" target="_blank" rel="noopener">GitHub</a>
     <a href="https://apps.apple.com/it/developer/abbas-yousefzadeh/id1861434809" target="_blank" rel="noopener">App Store</a>
@@ -327,6 +508,61 @@
     <a href="mailto:abbas.yousefzadeh98@gmail.com">Email</a>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine   = window.matchMedia('(pointer: fine)').matches;
+
+    /* ── Nav border on scroll ── */
+    var nav = document.getElementById('nav');
+    var onScroll = function () {
+      if (window.scrollY > 8) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ── Reveal on scroll ── */
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(function (el) { io.observe(el); });
+    } else {
+      revealEls.forEach(function (el) { el.classList.add('in'); });
+    }
+
+    /* ── Card accent tracking + gentle 3D tilt ── */
+    if (fine && !reduce) {
+      document.querySelectorAll('[data-tilt]').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width;
+          var py = (e.clientY - r.top) / r.height;
+          card.style.setProperty('--mx', (px * 100) + '%');
+          card.style.setProperty('--my', (py * 100) + '%');
+          var icon = card.querySelector('.app-icon');
+          if (icon) {
+            var rx = (0.5 - py) * 10, ry = (px - 0.5) * 10;
+            icon.style.transform = 'perspective(500px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+          }
+        });
+        card.addEventListener('mouseleave', function () {
+          var icon = card.querySelector('.app-icon');
+          if (icon) icon.style.transform = '';
+        });
+      });
+    }
+
+    /* ── A quiet note for the curious ── */
+    console.log('%cساخته‌شده با دقت — built with care.', 'color:#8b95ff;font-size:13px;font-family:monospace');
+    console.log('%cYou looked under the hood. Say hi: abbas.yousefzadeh98@gmail.com', 'color:#8a8a9c;font-size:11px');
+  })();
+</script>
 
 </body>
 </html>
